@@ -1,0 +1,9 @@
+// Custom and overridden variables
+$menu-item-color: $dark-color;
+$menu-item-radius: $radius-small;
+$menu-item-hover-color: $menu-item-color;
+$menu-item-hover-background-color: $dark-hover-background-color;
+$menu-item-active-color: $primary;
+$menu-item-active-background-color: $dark-background-color;
+$menu-list-border-left: 1px solid $grey;
+$menu-label-color: darken($menu-item-color, 4);
