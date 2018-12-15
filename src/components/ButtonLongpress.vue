@@ -1,6 +1,6 @@
 <template>
   <button
-    class="button longpress-button"
+    class="button b-longpress-button"
     :class="{'pressed': status !== 'default'}"
     @touchend="cancel"
     @touchstart.prevent="start"
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'button-longpress',
+  name: 'ButtonLongpress',
   data() {
     return {
       status: 'default',
@@ -67,7 +67,7 @@ export default {
 <style lang="scss">
   @import "../assets/scss/v-bulma-lib";
 
-  .longpress-button {
+  .b-longpress-button {
     position: relative;
     background: linear-gradient(to right, $grey-light 50%, $white 50%);
     background-size: 200% 100%;
