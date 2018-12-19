@@ -1,6 +1,6 @@
 <template>
   <button
-    class="button b-longpress-button"
+    class="button b-hold-button"
     :class="{'pressed': status !== 'default'}"
     @touchend="cancel"
     @touchstart.prevent="start"
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'ButtonLongpress',
+  name: 'HoldButton',
   data() {
     return {
       status: 'default',
@@ -21,7 +21,7 @@ export default {
     }
   },
   props: {
-    duration: { type: Number, default: 3000 },
+    duration: { type: Number, default: 1000 },
     resetOnComplete: Boolean
   },
   created() {
@@ -32,14 +32,14 @@ export default {
   },
   computed: {
     transitionDuration() {
-      return this.status === 'pressing' ? this.duration : 0
+      return this.status === 'pressed' ? this.duration : 0
     }
   },
   methods: {
     start() {
       if (this.status === 'default' || this.status) {
-        this.status = 'pressing'
-        this.$emit('pressing')
+        this.status = 'pressed'
+        this.$emit('pressed')
         this.timeout = setTimeout(() => {
           this.complete()
         }, this.duration)
@@ -54,7 +54,7 @@ export default {
       }
     },
     cancel () {
-      if (this.status === 'pressing') {
+      if (this.status === 'pressed') {
         clearTimeout(this.timeout)
         this.status = 'default'
         this.$emit('cancel')
@@ -65,18 +65,17 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../assets/scss/v-bulma-lib";
+  @import "../assets/scss/buefy-addons-lib";
 
-  .b-longpress-button {
+  .b-hold-button {
     position: relative;
-    background: linear-gradient(to right, $grey-light 50%, $white 50%);
-    background-size: 200% 100%;
+    background: linear-gradient(to right, $grey-light 50%, transparent 50%);
+    background-size: 206% 100%;
     background-position: right bottom;
+    background-repeat: no-repeat;
     transition: background 1s linear;
 
     &.pressed {
-      background: linear-gradient(to right, $grey-light 50%, $white 50%);
-      background-size: 200% 100%;
       background-position: left bottom;
     }
 
@@ -85,19 +84,19 @@ export default {
     @each $name, $pair in $colors {
       $color: nth($pair, 1);
       $color-invert: nth($pair, 2);
-      $color-pressing: lighten($color, $change-amount);
+      $color-hover: darken($color, 2.5%);
+      $color-pressed: lighten($color, $change-amount);
 
       @if colorLuminance($color) > 0.25 {
-        $color-pressing: darken($color, $change-amount);
+        $color-pressed: darken($color, $change-amount);
       }
       &.is-#{$name} {
-        background: linear-gradient(to right, $color-pressing 50%, $color 50%);
-        background-size: 200% 100%;
+        background: linear-gradient(to right, $color-pressed 50%, transparent 50%);
+        background-size: 206% 100%;
         background-position: right bottom;
-        transition: background 1s linear;
+        background-repeat: no-repeat;
+
         &.pressed {
-          background: linear-gradient(to right, $color-pressing 50%, $color 50%);
-          background-size: 200% 100%;
           background-position: left bottom;
         }
       }

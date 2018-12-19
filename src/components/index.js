@@ -1,5 +1,5 @@
-import ButtonLongpress from 'ButtonLongpress'
+import HoldButton from './HoldButton'
 
 export {
-  ButtonLongpress
+  HoldButton
 }

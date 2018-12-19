@@ -1,8 +1,12 @@
 import Vue from 'vue'
+import Buefy from 'buefy'
 import App from './App.vue'
-import * as components from './components'
+import components from './components'
+import './assets/scss/app.scss'
 
 Vue.config.productionTip = false
+
+Vue.use(Buefy)
 
 new Vue({
   components,
