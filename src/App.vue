@@ -4,6 +4,7 @@
       <img alt="Vue logo" src="./assets/logo.png">
     </div>
     <div class="">
+      <hr/>
       <h2>Hold Buttons</h2>
       <hold-button>Default Button</hold-button>&nbsp;
       <hold-button class="is-white">White Button</hold-button>&nbsp;
@@ -27,6 +28,7 @@
 
     </div>
     <div>
+      <hr/>
       <h2>Hold Icons</h2>
       <div style="font-size: 1.5em;" class="columns is-multiline">
         <div class="column is-one-quarter">
@@ -45,14 +47,37 @@
       </div>
     </div>
     <div>
+      <hr/>
       <h2>ClockPicker</h2>
       <div class="columns is-multiline">
         <div class="column is-one-quarter">
+          Standard Dropdown:<br/>
           <b-clockpicker v-model="timevalue"></b-clockpicker>
         </div>
-        <div class="column is-one-quarter"></div>
-        <div class="column is-one-quarter"></div>
-        <div class="column is-one-quarter"></div>
+        <div class="column is-one-quarter">
+          Standard Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter">
+          Link Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline class="is-link"></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter">
+          Info Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline class="is-info"></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter">
+          Success Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline class="is-success"></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter">
+          Warning Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline class="is-warning"></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter">
+          Danger Inline:<br/>
+          <b-clockpicker v-model="timevalue" inline class="is-danger"></b-clockpicker>
+        </div>
       </div>
     </div>
   </div>
