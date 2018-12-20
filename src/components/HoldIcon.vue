@@ -1,7 +1,5 @@
 <template>
-  <div class="hold-icon"
-
-  >
+  <div class="hold-icon">
     <div class="ring-container">
       <svg :viewBox="`0 0 ${outerDiameter} ${outerDiameter}`">
         <circle
@@ -21,14 +19,13 @@
           :cy="center"
           :stroke-dasharray="`${circumference} ${circumference}`"
           :stroke-dashoffset="dashOffset"
-          :style="{ 'transition-duration': `${transitionDuration}ms` }"
-        />
+          :style="{ 'transition-duration': `${transitionDuration}ms` }"/>
       </svg>
     </div>
     <div class="button-icon"
       @mouseup="cancel"
       @mousedown.prevent="start"
-    >
+      @mouseout="cancel">
       <slot></slot>
     </div>
   </div>
@@ -49,12 +46,6 @@ export default {
     resetOnComplete: { type: Boolean, default: true },
     thickness: { type: Number, default: 9 },
     hideRing: { type: Boolean, default: true }
-  },
-  created() {
-    document.addEventListener('mouseup', () => this.cancel())
-  },
-  destroyed() {
-    document.removeEventListener('mouseup', () => this.cancel())
   },
   computed: {
     transitionDuration() {

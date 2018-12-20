@@ -4,6 +4,7 @@
     :class="{'pressed': status !== 'default'}"
     @touchend="cancel"
     @touchstart.prevent="start"
+    @mouseout="cancel"
     @mouseup="cancel"
     @mousedown.prevent="start"
     :style="{ transitionDuration: `${transitionDuration}ms` }">
@@ -23,12 +24,6 @@ export default {
   props: {
     duration: { type: Number, default: 1000 },
     resetOnComplete: { type: Boolean, default: true }
-  },
-  created() {
-    document.addEventListener('mouseup', () => this.cancel())
-  },
-  destroyed() {
-    document.removeEventListener('mouseup', () => this.cancel())
   },
   computed: {
     transitionDuration() {
