@@ -26,6 +26,8 @@
   @mixin b-clockpicker-colors-set($color, $inverse) {
     .card-header {
       background-color: $color;
+    }
+    .card-header-title {
       color: $inverse;
     }
     .b-clockpicker-face {
