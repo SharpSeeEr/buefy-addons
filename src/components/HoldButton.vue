@@ -6,7 +6,7 @@
     @touchstart.prevent="start"
     @mouseup="cancel"
     @mousedown.prevent="start"
-    :style="{ transitionDuration: transitionDuration + 'ms' }">
+    :style="{ transitionDuration: `${transitionDuration}ms` }">
     <slot></slot>
   </button>
 </template>

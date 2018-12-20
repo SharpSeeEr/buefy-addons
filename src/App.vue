@@ -19,22 +19,29 @@
       <br/>
       <br/>
       <button class="button is-red" type="button">Normal Button</button>
+      <br/>
+      <br/>
+      <div style="font-size: 2em;">
+        Delete Button: <hold-icon class="is-danger is-large"></hold-icon>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
-import { HoldButton } from './components'
+import { HoldButton, HoldIcon } from './components'
 
 export default {
   name: 'app',
   components: {
-    HoldButton
+    HoldButton, HoldIcon
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -43,4 +50,5 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 </style>

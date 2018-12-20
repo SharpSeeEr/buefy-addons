@@ -1,39 +1,36 @@
 <template>
   <div class="hold-icon"
-    :style="{width: `${outerDiameter + 2}px`, height: `${outerDiameter + 2}px`}"
 
   >
+    <div class="ring-container">
+      <svg :viewBox="`0 0 ${outerDiameter} ${outerDiameter}`">
+        <circle
+          class="background-ring"
+          :class="[backgroundRingClass]"
+          fill="transparent"
+          :stroke-width="thickness"
+          :r="radius"
+          :cx="center"
+          :cy="center"/>
+        <circle
+          class="progress-ring"
+          fill="transparent"
+          :stroke-width="thickness"
+          :r="radius"
+          :cx="center"
+          :cy="center"
+          :stroke-dasharray="`${circumference} ${circumference}`"
+          :stroke-dashoffset="dashOffset"
+          :style="{ 'transition-duration': `${transitionDuration}ms` }"
+        />
+      </svg>
+    </div>
     <div class="button-icon"
-      :style="iconStyle"
       @mouseup="cancel"
       @mousedown.prevent="start"
     >
-      <b-icon pack="fas" icon="trash-alt"></b-icon>
-      <!-- <i class="fas fa-trash-alt"></i> -->
+      <i class="fas fa-trash-alt"></i>
     </div>
-    <svg class="ring-container"
-      width="100%"
-      height="100%"
-    >
-      <circle
-        class="background-ring"
-        fill="transparent"
-        :stroke-width="thickness"
-        :r="radius"
-        :cx="center"
-        :cy="center"/>
-      <circle
-        class="progress-ring"
-        fill="transparent"
-        :stroke-width="thickness"
-        :r="radius"
-        :cx="center"
-        :cy="center"
-        :stroke-dasharray="`${circumference} ${circumference}`"
-        :stroke-dashoffset="dashOffset"
-        :style="{ 'transition-duration': `${transitionDuration}ms` }"
-      />
-    </svg>
   </div>
 </template>
 
@@ -43,14 +40,15 @@ export default {
   data() {
     return {
       status: 'default',
-      timeout: null
+      timeout: null,
+      outerDiameter: 120
     }
   },
   props: {
     duration: { type: Number, default: 1500 },
     resetOnComplete: Boolean,
-    size: { type: String, default: 'normal' },
-    thickness: { type: Number, default: 8 }
+    thickness: { type: Number, default: 9 },
+    hideRing: { type: Boolean, default: true }
   },
   created() {
     document.addEventListener('mouseup', () => this.cancel())
@@ -62,42 +60,20 @@ export default {
     transitionDuration() {
       return this.status === 'pressed' ? this.duration : 0
     },
-    ringClass() {
-      return 'ring-' + this.status
-    },
-    outerDiameter() {
-      return this.thickness * 2 + 120 //this.size
-    },
     radius() {
-      // return this.size / 2
-      return 120 / 2
+      return (this.outerDiameter / 2) - this.thickness / 2
     },
     circumference() {
       return 2 * this.radius * Math.PI
     },
     center() {
-      return this.radius + this.thickness
+      return this.outerDiameter / 2
     },
-    ring2Style() {
-      return { 'stroke-width': this.thickness }
-    },
-    ringStyle() {
-      return {
-        'stroke-dasharray': `${this.circumference}, ${this.circumference}`,
-        'stroke-dashoffset': this.circumference,
-        'stroke-width': this.thickness
+    backgroundRingClass() {
+      if (this.hideRing && this.status === 'default') {
+        return 'hidden'
       }
-    },
-    iconStyle() {
-      let center = 24
-      if (this.size === 'large') {
-        center = 48
-      }
-      center = this.outerDiameter / 2 - 12 // center / 2
-      return {
-        // top: `${center}px`,
-        // left: `${center}px`
-      }
+      return false
     },
     dashOffset() {
       return this.status === 'default' ? this.circumference : 0
@@ -137,74 +113,31 @@ export default {
 @import "../assets/scss/buefy-addons-lib";
 
 .hold-icon {
-  display: inline-block;
-  position: relative;
-  border: 1px solid silver;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  font-size: 1.0em;
+  vertical-align: middle;
 
   .button-icon {
-    height: 1.5rem;
-    width: 1.5rem;
-    .fas {
-      font-size: 1em;
-    }
+    position: absolute;
   }
-
-  &.is-small {
-    .button-icon {
-      height: 1rem;
-      width: 1rem;
-      .fas {
-        font-size: .8em;
-      }
-    }
-  }
-  &.is-medium {
-    .button-icon {
-      height: 2rem;
-      width: 2rem;
-      .fas {
-        font-size: 1.33em;
-      }
-    }
-  }
-  &.is-large {
-    .button-icon {
-      height: 3rem;
-      width: 3rem;
-      top: 1.5rem;
-      left: 1.5rem;
-      .fas {
-        font-size: 2em;
-      }
-    }
-  }
-  &.is-xlarge {
-    .button-icon {
-      height: 3.5rem;
-      width: 3.5rem;
-      .fas {
-        font-size: 3em;
-      }
-    }
-  }
-  //font-size: 2em;
 
   .ring-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 2.0em;
+    height: 2.0em;
+
+    .hidden {
+      display:none;
+    }
   }
+
   .progress-ring {
-    stroke: #00F;
+    stroke: black;
     transition: 2s stroke-dashoffset linear;
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-  }
-
-  .button-icon {
-    position: absolute;
-    left: .5rem;
-    top: .5rem;
   }
 
   @each $name, $pair in $colors {
@@ -215,6 +148,7 @@ export default {
     //   $bgcolor: darken($color, $change-amount);
     // }
     &.is-#{$name} {
+      color: $color;
       .progress-ring {
         stroke: $color;
       }

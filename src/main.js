@@ -3,6 +3,7 @@ import Buefy from 'buefy'
 import App from './App.vue'
 import components from './components'
 import './assets/scss/app.scss'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 Vue.config.productionTip = false
 
