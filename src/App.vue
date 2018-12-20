@@ -1,7 +1,10 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <div>
+  <div id="app" class="container content">
+    <div class="logo">
+      <img alt="Vue logo" src="./assets/logo.png">
+    </div>
+    <div class="">
+      <h2>Hold Buttons</h2>
       <hold-button>Default Button</hold-button>&nbsp;
       <hold-button class="is-white">White Button</hold-button>&nbsp;
       <hold-button class="is-light">Light Button</hold-button>&nbsp;
@@ -21,22 +24,56 @@
       <button class="button is-red" type="button">Normal Button</button>
       <br/>
       <br/>
-      <div style="font-size: 2em;">
-        Delete Button: <hold-icon class="is-danger is-large"></hold-icon>
-      </div>
 
+    </div>
+    <div>
+      <h2>Hold Icons</h2>
+      <div style="font-size: 1.5em;" class="columns is-multiline">
+        <div class="column is-one-quarter">
+          Normal Button:
+          <hold-icon class="is-link">
+            <i class="fas fa-plus"></i>
+          </hold-icon>
+        </div>
+        <div class="column is-one-quarter">Default: <hold-icon><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Primary: <hold-icon class="is-primary"><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Link: <hold-icon class="is-link"><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Info: <hold-icon class="is-info"><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Success: <hold-icon class="is-success"><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Warning: <hold-icon class="is-warning"><i class="fas fa-trash-alt"></i></hold-icon></div>
+        <div class="column is-one-quarter">Danger: <hold-icon class="is-danger"><i class="fas fa-trash-alt"></i></hold-icon></div>
+      </div>
+    </div>
+    <div>
+      <h2>ClockPicker</h2>
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter">
+          <b-clockpicker v-model="timevalue"></b-clockpicker>
+        </div>
+        <div class="column is-one-quarter"></div>
+        <div class="column is-one-quarter"></div>
+        <div class="column is-one-quarter"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { HoldButton, HoldIcon } from './components'
+import { HoldButton, HoldIcon, Clockpicker as BClockpicker } from './components'
 
 export default {
   name: 'app',
   components: {
-    HoldButton, HoldIcon
+    HoldButton, HoldIcon, BClockpicker
+  },
+  data() {
+    return {
+      timevalue: new Date()
+    }
   }
+  // created() {
+  //   this.timevalue = new Date()
+  // }
 }
 </script>
 
@@ -46,9 +83,13 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  // text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.logo {
+  text-align: center;
 }
 
 </style>

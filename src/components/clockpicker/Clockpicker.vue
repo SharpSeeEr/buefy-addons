@@ -60,14 +60,8 @@
             class="b-clockpicker-body"
             :style="{ width: faceSize + 'px', height: faceSize + 'px' }">
             <div v-if="!inline" class="b-clockpicker-time">
-              <div
-                class="b-clockpicker-btn"
-                :class="{ active: isSelectingHour }"
-                @click="isSelectingHour = true">Hours</div>
-              <span
-                class="b-clockpicker-btn"
-                :class="{ active: !isSelectingHour }"
-                @click="isSelectingHour = false">Min</span>
+              <div class="b-clockpicker-btn" :class="{ active: isSelectingHour }" @click="isSelectingHour = true">Hours</div>
+              <span class="b-clockpicker-btn" :class="{ active: !isSelectingHour }" @click="isSelectingHour = false">Min</span>
             </div>
             <div v-if="!isHourFormat24 && !inline" class="b-clockpicker-period">
               <div
@@ -79,7 +73,7 @@
                 :class="{ active: meridienSelected == PM }"
                 @click="onMeridienClick(PM)">{{ PM }}</div>
             </div>
-            <b-clockpicker-face
+            <clockpicker-face
               :picker-size="faceSize"
               :min="minFaceValue"
               :max="maxFaceValue"
@@ -93,7 +87,7 @@
         </div>
         <footer
           v-if="$slots.default !== undefined && $slots.default.length"
-          class="b-clockpicker-footer card-footer">
+          class="clockpicker-footer card-footer">
           <slot/>
         </footer>
       </div>
@@ -103,10 +97,12 @@
 </template>
 
 <script>
-import FormElementMixin from '~buefy/src/utils/FormElementMixin'
-import BClockpickerFace from './ClockpickerFace'
-import { Dropdown as BDropdown } from '~buefy/src/components/dropdown'
-import BInput from '~buefy/src/components/input'
+import { isMobile } from 'buefy/src/utils/helpers'
+
+import FormElementMixin from 'buefy/src/utils/FormElementMixin'
+import { Dropdown } from 'buefy/src/components/dropdown'
+import Input from 'buefy/src/components/input'
+import ClockpickerFace from './ClockpickerFace'
 
 const outerPadding = 12
 
@@ -115,13 +111,70 @@ const PM = 'PM'
 const HOUR_FORMAT_24 = '24'
 const HOUR_FORMAT_12 = '12'
 
+const formatNumber = (value) => {
+  return (value < 10 ? '0' : '') + value
+}
+
+const defaultTimeFormatter = (date, vm) => {
+  let hours = date.getHours()
+  const minutes = date.getMinutes()
+  let period = ''
+  if (vm.hourFormat === HOUR_FORMAT_12) {
+    period = ' ' + (hours < 12 ? AM : PM)
+    if (hours > 12) {
+      hours -= 12
+    } else if (hours === 0) {
+      hours = 12
+    }
+  }
+  return formatNumber(hours) + ':' + formatNumber(minutes) + period
+}
+
+const defaultTimeParser = (timeString, vm) => {
+  if (timeString) {
+    let am = false
+    if (this.hourFormat === HOUR_FORMAT_12) {
+      const dateString12 = timeString.split(' ')
+      timeString = dateString12[0]
+      am = dateString12[1] === AM
+    }
+    const time = timeString.split(':')
+    let hours = parseInt(time[0], 10)
+    const minutes = parseInt(time[1], 10)
+    if (isNaN(hours) || hours < 0 || hours > 23 ||
+      (vm.hourFormat === HOUR_FORMAT_12 && (hours < 1 || hours > 12)) ||
+      isNaN(minutes) || minutes < 0 || minutes > 59) {
+      return null
+    }
+    let d = null
+    if (vm.dateSelected && !isNaN(vm.dateSelected)) {
+      d = new Date(this.dateSelected)
+    } else {
+      d = new Date()
+      d.setMilliseconds(0)
+      d.setSeconds(0)
+    }
+    d.setMinutes(minutes)
+    if (vm.hourFormat === HOUR_FORMAT_12) {
+      if (am && hours === 12) {
+        hours = 0
+      } else if (!am && hours !== 12) {
+        hours += 12
+      }
+    }
+    d.setHours(hours)
+    return d
+  }
+  return null
+}
+
 export default {
   name: 'BClockpicker',
   inheritAttrs: false,
   components: {
-    BClockpickerFace,
-    BInput,
-    BDropdown
+    ClockpickerFace,
+    Input, // eslint-disable-line
+    Dropdown // eslint-disable-line
   },
   mixins: [FormElementMixin],
   props: {
@@ -155,15 +208,11 @@ export default {
     },
     timeFormatter: {
       type: Function,
-      default: (date) => {
-        return this.defaultTimeFormatter(date)
-      }
+      default: defaultTimeFormatter
     },
     timeParser: {
       type: Function,
-      default: (date) => {
-        return this.defaultTimeParser(date)
-      }
+      default: defaultTimeParser
     },
     autoSwitch: {
       type: Boolean,
@@ -182,6 +231,10 @@ export default {
   },
   data() {
     return {
+      dateSelected: this.value,
+      hoursSelected: null,
+      minutesSelected: null,
+      meridienSelected: null,
       isSelectingHour: true,
       isDragging: false,
       AM,
@@ -211,7 +264,7 @@ export default {
           }
         }
         hours.push({
-          label: this.formatNumber(label),
+          label: formatNumber(label),
           value: value
         })
       }
@@ -221,7 +274,7 @@ export default {
       const minutes = []
       for (let i = 0; i < 60; i += this.incrementMinutes) {
         minutes.push({
-          label: this.formatNumber(i),
+          label: formatNumber(i),
           value: i
         })
       }
@@ -229,7 +282,7 @@ export default {
     },
     hoursDisplay() {
       if (this.hoursSelected == null) return '--'
-      if (this.isHourFormat24) return this.pad(this.hoursSelected)
+      if (this.isHourFormat24) return formatNumber(this.hoursSelected)
 
       let display = this.hoursSelected
       if (this.meridienSelected === this.PM) display -= 12
@@ -237,7 +290,7 @@ export default {
       return display
     },
     minutesDisplay() {
-      return this.minutesSelected == null ? '--' : this.pad(this.minutesSelected)
+      return this.minutesSelected == null ? '--' : formatNumber(this.minutesSelected)
     },
     minFaceValue() {
       return this.isSelectingHour &&
@@ -252,13 +305,16 @@ export default {
     faceFormatter() {
       return this.isSelectingHour && !this.isHourFormat24
         ? (val) => val
-        : this.formatNumber
+        : formatNumber
     },
     faceSize() {
       return this.pickerSize - (outerPadding * 2)
     },
     isHourFormat24() {
       return this.hourFormat === HOUR_FORMAT_24
+    },
+    isMobile() {
+      return this.mobileNative && isMobile.any()
     }
   },
   methods: {
@@ -422,10 +478,6 @@ export default {
         this.$refs.dropdown.isActive = false
       }
     },
-    pad(value) {
-      return (value < 10 ? '0' : '') + value
-    },
-
     /*
     * Format date into string
     */
@@ -438,68 +490,17 @@ export default {
     },
     formatTime(date) {
       if (typeof this.timeFormatter === 'function') {
-        return this.timeFormatter(date)
+        return this.timeFormatter(date, this)
       } else {
-        return this.defaultTimeFormatter(date)
+        return defaultTimeFormatter(date, this)
       }
     },
     parseTime(date) {
       if (typeof this.timeParser === 'function') {
-        return this.timeParser(date)
+        return this.timeParser(date, this)
       } else {
-        return this.defaultTimeParser(date)
+        return defaultTimeParser(date, this)
       }
-    },
-    defaultTimeFormatter(date) {
-      let hours = date.getHours()
-      const minutes = date.getMinutes()
-      let period = ''
-      if (this.hourFormat === HOUR_FORMAT_12) {
-        period = ' ' + (hours < 12 ? AM : PM)
-        if (hours > 12) {
-          hours -= 12
-        } else if (hours === 0) {
-          hours = 12
-        }
-      }
-      return this.formatNumber(hours) + ':' + this.pad(minutes) + period
-    },
-    defaultTimeParser(timeString) {
-      if (timeString) {
-        let am = false
-        if (this.hourFormat === HOUR_FORMAT_12) {
-          const dateString12 = timeString.split(' ')
-          timeString = dateString12[0]
-          am = dateString12[1] === AM
-        }
-        const time = timeString.split(':')
-        let hours = parseInt(time[0], 10)
-        const minutes = parseInt(time[1], 10)
-        if (isNaN(hours) || hours < 0 || hours > 23 ||
-          (this.hourFormat === HOUR_FORMAT_12 && (hours < 1 || hours > 12)) ||
-          isNaN(minutes) || minutes < 0 || minutes > 59) {
-          return null
-        }
-        let d = null
-        if (this.dateSelected && !isNaN(this.dateSelected)) {
-          d = new Date(this.dateSelected)
-        } else {
-          d = new Date()
-          d.setMilliseconds(0)
-          d.setSeconds(0)
-        }
-        d.setMinutes(minutes)
-        if (this.hourFormat === HOUR_FORMAT_12) {
-          if (am && hours === 12) {
-            hours = 0
-          } else if (!am && hours !== 12) {
-            hours += 12
-          }
-        }
-        d.setHours(hours)
-        return d
-      }
-      return null
     }
   },
   created() {

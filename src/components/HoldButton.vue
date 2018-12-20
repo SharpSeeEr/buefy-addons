@@ -22,7 +22,7 @@ export default {
   },
   props: {
     duration: { type: Number, default: 1000 },
-    resetOnComplete: Boolean
+    resetOnComplete: { type: Boolean, default: true }
   },
   created() {
     document.addEventListener('mouseup', () => this.cancel())
@@ -47,17 +47,15 @@ export default {
     },
     complete() {
       this.$emit('completed')
-      if (this.resetOnComplete) {
-        this.status = 'default'
-      } else {
-        this.status = 'completed'
-      }
+      this.status = 'completed'
     },
     cancel () {
+      clearTimeout(this.timeout)
       if (this.status === 'pressed') {
-        clearTimeout(this.timeout)
         this.status = 'default'
         this.$emit('cancel')
+      } else if (this.status === 'completed' && this.resetOnComplete) {
+        this.status = 'default'
       }
     }
   }

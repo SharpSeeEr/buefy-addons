@@ -29,7 +29,7 @@
       @mouseup="cancel"
       @mousedown.prevent="start"
     >
-      <i class="fas fa-trash-alt"></i>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -46,7 +46,7 @@ export default {
   },
   props: {
     duration: { type: Number, default: 1500 },
-    resetOnComplete: Boolean,
+    resetOnComplete: { type: Boolean, default: true },
     thickness: { type: Number, default: 9 },
     hideRing: { type: Boolean, default: true }
   },
@@ -92,17 +92,15 @@ export default {
     },
     complete() {
       this.$emit('completed')
-      if (this.resetOnComplete) {
-        this.status = 'default'
-      } else {
-        this.status = 'completed'
-      }
+      this.status = 'completed'
     },
     cancel () {
+      clearTimeout(this.timeout)
       if (this.status === 'pressed') {
-        clearTimeout(this.timeout)
         this.status = 'default'
         this.$emit('cancel')
+      } else if (this.status === 'completed' && this.resetOnComplete) {
+        this.status = 'default'
       }
     }
   }
