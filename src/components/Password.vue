@@ -24,7 +24,7 @@
           :disabled="showingPassword"
           class="input"
           type="password"
-          placeholder="Confirm Password">  <!-- Set a touchedd and dirty flag -->
+          placeholder="Confirm Password">  <!-- Set a touched and dirty flag -->
         <span v-if="showLock" class="icon is-small is-left">
           <i class="fas fa-lock"></i>
         </span>
