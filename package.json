@@ -5,14 +5,16 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --target lib",
     "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --target lib",
+    "styleguide": "vue-cli-service styleguidist",
+    "styleguide:build": "vue-cli-service styleguidist:build",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "vue": "^2.5.17",
+    "@fortawesome/fontawesome-free": "^5.6.1",
     "buefy": "^0.7.1",
-    "@fortawesome/fontawesome-free": "^5.6.1"
+    "vue": "^2.5.17"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
@@ -25,10 +27,11 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0-0",
     "eslint-plugin-jest": "^22.1.2",
-    "vue-template-compiler": "^2.5.17",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
-    "node-sass": "^4.11.0"
+    "vue-cli-plugin-styleguidist": "^0.1.10",
+    "vue-template-compiler": "^2.5.17"
   }
 }
