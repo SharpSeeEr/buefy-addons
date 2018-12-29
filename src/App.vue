@@ -80,20 +80,27 @@
         </div>
       </div>
     </div>
+
+    <div>
+      <hr/>
+      <h2>Password Field</h2>
+      <password v-model="password" confirm show-lock reveal></password>
+    </div>
   </div>
 </template>
 
 <script>
-import { HoldButton, HoldIcon, Clockpicker as BClockpicker } from './components'
+import { HoldButton, HoldIcon, Clockpicker as BClockpicker, Password } from './components'
 
 export default {
   name: 'app',
   components: {
-    HoldButton, HoldIcon, BClockpicker
+    HoldButton, HoldIcon, BClockpicker, Password // eslint-disable-line
   },
   data() {
     return {
-      timevalue: new Date()
+      timevalue: new Date(),
+      password: ''
     }
   }
   // created() {
