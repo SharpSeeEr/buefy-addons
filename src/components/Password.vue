@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="field">
-      <p class="control" :class="[controlClasses, hasRevealClass]">
+      <p class="control" v-bind="$attrs" :class="[controlClasses, hasRevealClass]">
         <input v-model="passwordValue"
           @input="passwordChange"
           ref="input"
@@ -17,7 +17,7 @@
         </span>
       </p>
     </div>
-    <div v-if="confirm" class="field">
+    <div v-if="confirm" v-bind="$attrs" class="field">
       <p class="control" :class="controlClasses">
         <input v-model="confirmValue"
           @input="passwordChange"
@@ -39,6 +39,7 @@
 <script>
 export default {
   name: 'Password',
+  inheritAttrs: false,
   data() {
     return {
       passwordValue: '',
